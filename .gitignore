@@ -1,3 +1,6 @@
+various
+various/
+
 ##gitignore-start:macos
 *.DS_Store
 .AppleDouble

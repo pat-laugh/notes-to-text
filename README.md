@@ -10,3 +10,11 @@ I don't know the exact specifications of a Notes document. Therefore, the
 application may output incorrect text. Many errors have been fixed (the
 documents' format lack uniform consistency). As of now all the text I've
 converted was correct.
+
+## Installation
+
+### Linux and Mac
+
+The external library [various](https://github.com/pat-laugh/various-cpp)
+is used in this project. You can make a symbolic link to it. After that, make
+should create the executable.
