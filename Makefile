@@ -1,7 +1,7 @@
 # MIT License
 # Copyright 2017 Patrick Laughrea
 
-DIR_NOTES_TO_TEXT = ./lib
+DIR_NOTES_TO_TEXT = ./notesToText
 DIR_VARIOUS = ./various
 
 OPTIONS = -std=c++11 -Wall -Wextra -Wno-missing-field-initializers -iquote .
