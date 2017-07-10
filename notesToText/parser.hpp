@@ -21,12 +21,15 @@ namespace ntt
 		
 	private:
 		various::SmartIterator it;
-		bool titleReadNote = false;
+		std::string left, right, leftover;
 		
 		Parser(various::SmartIterator it);
 		~Parser();
 		
 		std::vector<std::string> parse();
+		
+		void readStart();
+		void readNextTag();
 		
 	}
 }
