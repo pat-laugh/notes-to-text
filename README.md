@@ -19,6 +19,12 @@ The external library [various](https://github.com/pat-laugh/various-cpp)
 is used in this project. You can make a symbolic link to it. After that, make
 should create the executable.
 
+## Usage
+
+The executable can only be called with one parameter that is the name of a file.
+
+The output is the content of the note as it would be if it were text only.
+
 ## Concept
 
 ### Library
