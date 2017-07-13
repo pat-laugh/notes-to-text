@@ -14,13 +14,28 @@ static void splitString(string& left, string& right, string::size_type index, st
 Parser::Parser(SmartIterator it) : it(move(it)) {}
 Parser::~Parser() {}
 
+static void replaceAll(string& s, const string& from, const string& to)
+{
+	for (string::size_type i = 0; (i = s.find(from, i)) != string::npos; i += to.length())
+		s.replace(i, from.length(), to);
+}
+
+static string filterHtml(string&& s)
+{
+	vector<string> from = {"<br>", "&nbsp;", "&lt;", "&gt;", "&quot;", "&apos;"};
+	vector<string> to = {"", " ", "<", ">", "\"", "\'"};
+	for (vector<string>::size_type i = 0; i < from.size(); ++i)
+		replaceAll(s, from[i], to[i]);
+	return s;
+}
+
 vector<string> Parser::parse()
 {
 	vector<string> lines;
 	readStart();
-	lines.push_back(move(left));
+	lines.push_back(filterHtml(move(left)));
 	while (getLine())
-		lines.push_back(move(left));
+		lines.push_back(filterHtml(move(left)));
 	return lines;
 }
 
