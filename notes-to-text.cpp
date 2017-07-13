@@ -13,26 +13,22 @@ using namespace various;
 
 int main(int argc, char** argv)
 {
-	SmartIterator it("");
-	if (argc <= 1)
-		it = SmartIterator(cin.rdbuf());
-	else if (argc > 2)
+	if (argc != 2)
 	{
 		cerr << "Usage: " << argv[0] << " [file]" << endl;
 		return 1;
 	}
-	else
+
+	ifstream fileIn(argv[1], ios::binary);
+	if (fileIn.fail())
 	{
-		ifstream fileIn(argv[1], ios::binary);
-		if (fileIn.fail())
-		{
-			cerr << "Error: failed to open file \"" << argv[1] << "\"" << endl;
-			return 1;
-		}
-		it = SmartIterator(fileIn.rdbuf());
+		cerr << "Error: failed to open file \"" << argv[1] << "\"" << endl;
+		return 1;
 	}
+	
 	try
 	{
+		SmartIterator it(fileIn.rdbuf());
 		auto lines = Parser::parse(move(it));
 		for (const auto& line : lines)
 			cout << line << endl;
