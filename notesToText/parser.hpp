@@ -30,6 +30,6 @@ namespace ntt
 		
 		void readStart();
 		void readNextTag();
-		
-	}
+		bool getLine();
+	};
 }

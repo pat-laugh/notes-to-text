@@ -27,8 +27,7 @@ string  ntt::getTagName(HtmlTag tag)
 
 HtmlTag ntt::getTag(const string& str)
 {
-	if (str.empty())
-		return HtmlTag::ERROR;
+	assert(!str.empty());
 	switch (str[0])
 	{
 	case 'b':
@@ -48,5 +47,5 @@ HtmlTag ntt::getTag(const string& str)
 	default:
 		break;
 	}
-	return HtmlTag::ERROR;
+	assert(false);
 }

@@ -3,12 +3,13 @@
 #include "parser.hpp"
 
 #include "utilsHtml.hpp"
+#include "utilsSweepers.hpp"
 
 using namespace ntt;
 using namespace std;
 using namespace various;
 
-void splitString(string& left, string& right, int index, int length = 1);
+static void splitString(string& left, string& right, string::size_type index, string::size_type length = 1);
 
 Parser::Parser(SmartIterator it) : it(move(it)) {}
 Parser::~Parser() {}
@@ -27,11 +28,12 @@ void Parser::readStart()
 {
 	//in note file, text immediately follows body, so get it
 	//and put text in next tag in leftover for use later
-	readToTag(in, HtmlTag::DIV, false, left);
-	readToTag(in, HtmlTag::DIV, true, leftover);
+	getToTag(it, HtmlTag::BODY, false);
+	readToTag(it, HtmlTag::DIV, false, left);
+	readToTag(it, HtmlTag::DIV, true, leftover);
 }
 
-bool FileManager::getLine()
+bool Parser::getLine()
 {
     readNextTag();
     return !left.empty() || it;
@@ -44,31 +46,28 @@ void Parser::readNextTag()
         left = move(leftover);
         leftover.clear(); //to be sure it's now empty
     }
+    else if (!(readToTag(it, HtmlTag::DIV, false, left) && readToTag(it, HtmlTag::DIV, true, left)))
+    {
+        //there could still be text after the last tag, before the ending body tag
+        string tag = makeTagString<true>(HtmlTag::BODY);
+        auto index = left.find(tag);
+        if (index != string::npos)
+            left.erase(index);
+        else
+            left.clear();
+    }
     else
     {
-        if (!utils::readNextTag(in, tagToGet, left))
-        {
-            //there could still be text after the last tag, before the ending body tag
-            string tag = utils::makeTag(HtmlTag::BODY, true);
-            auto index = left.find(tag);
-            if (index != string::npos)
-                left.erase(index);
-            else
-                left.clear();
-        }
-        else
-        {
-            string tag = utils::makeTag(tagToGet, false);
-            auto index = left.find(tag);
-            if (index != string::npos)
-                splitString(left, leftover, index, tag.length());
-        }
+        string tag = makeTagString<false>(HtmlTag::DIV);
+        auto index = left.find(tag);
+        if (index != string::npos)
+            splitString(left, leftover, index, tag.length());
     }
 }
 
 //takes the left string and puts all the part after the index into the right string
 //the part in the middle (the index + length) is removed
-void splitString(string& left, string& right, int index, int length)
+static void splitString(string& left, string& right, string::size_type index, string::size_type length)
 {
     if (index + length < left.length())
         right = left.substr(index + length);

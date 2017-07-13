@@ -2,21 +2,83 @@
 //Copyright 2017 Patrick Laughrea
 #include "utilsSweepers.hpp"
 
+#include "utilsHtml.hpp"
+
 #include <deque>
 
 using namespace ntt;
 using namespace std;
+using namespace various;
 
-string::size_type matchBuffer(deque<char>& buffer, const string& text, string& readText);
-void dumpBuffer(deque<char>& buffer, string& readText);
-char pullFrontBuffer(deque<char>& buffer);
-bool readToChar(various::SmartIterator& it, char toGet, string& readText);
+static string::size_type matchBuffer(deque<char>& buffer, const string& text, string& readText);
+static void dumpBuffer(deque<char>& buffer, string& readText);
+static char pullFrontBuffer(deque<char>& buffer);
 
-bool ntt::readToText(various::SmartIterator& it, const string& text, string& readText)
+static SmartIterator& skipToChar(SmartIterator& it, char c)
+{
+	for (; it && *it != c; ++it)
+		;
+	return it;
+}
+
+static SmartIterator& readToChar(SmartIterator& it, char c, string& readText)
+{
+	for (; it && *it != c; ++it)
+		readText += *it;
+	return it;
+}
+
+static SmartIterator& getToGreaterThan(SmartIterator& it)
+{
+	for (; it && *it != '>'; ++it)
+		if (*it == '"' || *it == '\'')
+		{
+			char c = *it;
+			skipToChar(++it, c);
+		}
+	return it;
+}
+
+SmartIterator& ntt::getToTag(SmartIterator& it, HtmlTag tag, bool endTag)
+{
+	string tagString;
+    if (endTag)
+        return getToText(it, (tagString = makeTagString<true>(tag)));
+    
+    //read first to part of tag, like <div, then all before >
+    tagString = makeTagString<false>(tag);
+	tagString = tagString.substr(0, tagString.length() - 1);
+	if (!getToText(it, tagString))
+		return it;
+    return ++getToGreaterThan(it);
+}
+
+
+SmartIterator& ntt::readToTag(SmartIterator& it, HtmlTag tag, bool endTag, string& readText)
+{
+	string tagString;
+    if (endTag)
+        return readToText(it, (tagString = makeTagString<true>(tag)), readText);
+    
+    //read first to part of tag, like <div, then all before >
+    tagString = makeTagString<false>(tag);
+	tagString = tagString.substr(0, tagString.length() - 1);
+	if (!readToText(it, tagString, readText))
+		return it;
+    return ++getToGreaterThan(it);
+}
+
+SmartIterator& ntt::getToText(SmartIterator& it, const string& text)
+{
+    string dummy;
+    return readToText(it, text, dummy);
+}
+
+SmartIterator& ntt::readToText(SmartIterator& it, const string& text, string& readText)
 {
     readText.clear();
     if (text.empty())
-        return true;
+        return it;
     
 	deque<char> buffer;
     while (true)
@@ -24,42 +86,45 @@ bool ntt::readToText(various::SmartIterator& it, const string& text, string& rea
 		auto i = matchBuffer(buffer, text, readText);
         
         if (i == text.length())
-            return true;
+            return it;
 		
 		//if buffer is empty, it means no character has been matched yet, so match first
 		if (buffer.empty())
 		{
-			if (!readToChar(file, text.front(), readText))
-				return false;
+			if (!readToChar(it, text.front(), readText))
+				return it;
 			
 			buffer.push_back(text.front());
-			i++;
+			++it;
+			++i;
 		}
 		
 		//match remaining text
-        for (; i < text.length(); i++)
+        for (; ; ++i)
         {
-        	int c = file.get();
-            if (file.eof())
+	        if (i == text.length())
+	            return it;
+			
+            if (!it)
 			{
 				dumpBuffer(buffer, readText);
-                return false;
+                return it;
 			}
             
-            buffer.push_back((char)c);
+			char c = *it;
+            buffer.push_back(c);
+			++it;
             
             if (c != text[i])
                 break;
         }
         
-        if (i == text.length())
-            return true;
-        
 		readText += pullFrontBuffer(buffer);
     }
 }
 
-string::size_type matchBuffer(deque<char>& buffer, const string& text, string& readText)
+//how many sequential chars from buffer match those from text starting at index 0
+static string::size_type matchBuffer(deque<char>& buffer, const string& text, string& readText)
 {
 	while (!buffer.empty())
 	{
@@ -69,8 +134,8 @@ string::size_type matchBuffer(deque<char>& buffer, const string& text, string& r
 			continue;
 		}
 		
-		for (string::size_type i = 1; i < text.length(); i++)
-			if (i == buffer.size())
+		for (string::size_type i = 1; ; ++i)
+			if (i == buffer.size() || i == text.length())
 				return i;
 			else if (buffer[i] != text[i])
 			{
@@ -81,51 +146,15 @@ string::size_type matchBuffer(deque<char>& buffer, const string& text, string& r
 	return 0;
 }
 
-void dumpBuffer(deque<char>& buffer, string& readText)
+static void dumpBuffer(deque<char>& buffer, string& readText)
 {
 	while (!buffer.empty())
 		readText += pullFrontBuffer(buffer);
 }
 
-char pullFrontBuffer(deque<char>& buffer)
+static char pullFrontBuffer(deque<char>& buffer)
 {
 	char c = buffer.front();
 	buffer.pop_front();
 	return c;
-}
-
-bool readToChar(ifstream& file, char toGet, string& readText)
-{
-	int c;
-	while ((c = file.get()) != toGet && !file.eof())
-		readText += (char)c;
-	
-	return (file.eof()) ? false : true;
-}
-
-bool ntt::readToTag(various::SmartIterator& it, HtmlTag tag, bool endTag, string& readText)
-{
-    if (endTag)
-        return readToText(file, makeTag(tag, endTag), readText);
-    
-    //read first to part of tag, like <div, then all before >
-    string stringTag = makeTag(tag, endTag);
-    if (!readToText(file, stringTag.substr(0, stringTag.length() - 1), readText))
-        return false;
-    
-    string insideTag;
-    do
-    {
-        string temp;
-        bool found = readToText(file, stringTag.substr(stringTag.length() - 1), temp);
-        insideTag += temp;
-        if (!found)
-        {
-            readText += insideTag;
-            return false;
-        }
-    }
-    while (getIndexTagEnd(insideTag, 0) != insideTag.length()); //means end of tag was within quotes, so restart
-
-    return true;
 }
