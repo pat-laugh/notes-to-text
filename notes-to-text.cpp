@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 {
 	if (argc != 2)
 	{
-		cerr << "Usage: " << argv[0] << " [file]" << endl;
+		cerr << "Usage: " << argv[0] << " file" << endl;
 		return 1;
 	}
 
