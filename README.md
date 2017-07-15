@@ -25,6 +25,21 @@ The executable can only be called with one parameter that is the name of a file.
 
 The output is the content of the note as it would be if it were text only.
 
+### Tip
+
+To parse multiple files, you can use the following bash script:
+```
+for file in *.notesairdropdocument
+	do <executable> "$file" > "${file/notesairdropdocument/txt}"
+done
+```
+Substitute `<executable>` with the name of the executable. This puts the output
+for each file in the current directory in a file of the same name, but with the
+"txt" extension.
+
+This assumes that no file contains "notesairdropdocument" in their name other
+than the extension. Existing .txt files will be overwritten.
+
 ## Concept
 
 ### Library
