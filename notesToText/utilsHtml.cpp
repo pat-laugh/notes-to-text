@@ -24,28 +24,3 @@ string  ntt::getTagName(HtmlTag tag)
 	}
 	assert(false);
 }
-
-HtmlTag ntt::getTag(const string& str)
-{
-	assert(!str.empty());
-	switch (str[0])
-	{
-	case 'b':
-		if (str == "b") return HtmlTag::B;
-		else if (str == "body") return HtmlTag::BODY;
-		else if (str == "br") return HtmlTag::BR;
-		break;
-	case 'd': if (str == "div") return HtmlTag::DIV; break;
-	case 'h': if (str == "html") return HtmlTag::HTML; break;
-	case 'i': if (str == "i") return HtmlTag::I; break;
-	case 'p': if (str == "p") return HtmlTag::P; break;
-	case 's':
-		if (str == "span") return HtmlTag::SPAN;
-		else if (str == "sub") return HtmlTag::SUB;
-		break;
-	case 'u': if (str == "u") return HtmlTag::U; break;
-	default:
-		break;
-	}
-	assert(false);
-}

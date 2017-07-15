@@ -23,3 +23,9 @@ $(EXEC): $(OBJ_FILES)
 clean:
 	cd $(DIR_NOTES_TO_TEXT) && make clean -s
 	rm -rf $(EXEC) *.o
+
+op: OPTIONS += -O3 -DNDEBUG
+op: COMPILE_OP $(EXEC)
+
+COMPILE_OP:
+	cd $(DIR_NOTES_TO_TEXT) && make op -s
