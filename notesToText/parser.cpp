@@ -22,8 +22,8 @@ static void replaceAll(string& s, const string& from, const string& to)
 
 static string filterHtml(string&& s)
 {
-	vector<string> from = {"<br>", "&nbsp;", "&lt;", "&gt;", "&quot;", "&apos;"};
-	vector<string> to = {"", " ", "<", ">", "\"", "\'"};
+	vector<string> from = {"<br>", "&nbsp;", "&lt;", "&gt;", "&quot;", "&apos;", "<div>"};
+	vector<string> to = {"", " ", "<", ">", "\"", "\'", ""};
 	for (vector<string>::size_type i = 0; i < from.size(); ++i)
 		replaceAll(s, from[i], to[i]);
 	return s;
