@@ -158,3 +158,30 @@ static char pullFrontBuffer(deque<char>& buffer)
 	buffer.pop_front();
 	return c;
 }
+
+static string::size_type skipToChar(const string& str, char c, string::size_type i)
+{
+	for (; i < str.length() && str[i] != c; ++i)
+		;
+	return i;
+}
+
+static string::size_type getToGreaterThan(const string& str, string::size_type i)
+{
+	for (; i < str.length() && str[i] != '>'; ++i)
+		if (str[i] == '"' || str[i] == '\'')
+		{
+			char c = str[i++];
+			i = skipToChar(str, c, i);
+		}
+	return i;
+}
+
+void ntt::trimHtmlTags(string& str)
+{
+    for (string::size_type i = 0; i < str.length();)
+        if (str[i] == '<')
+            str.erase(i, getToGreaterThan(str, i + 1) + 1 - i);
+        else
+            ++i;
+}

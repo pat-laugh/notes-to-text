@@ -7,7 +7,7 @@
 using namespace ntt;
 using namespace std;
 
-string  ntt::getTagName(HtmlTag tag)
+string ntt::getTagName(HtmlTag tag)
 {
 	switch (tag)
 	{

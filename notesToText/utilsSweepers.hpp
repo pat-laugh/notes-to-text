@@ -17,4 +17,7 @@ namespace ntt
 	
 	various::SmartIterator& readToText(various::SmartIterator& it, const std::string& text, std::string& readText);
 	various::SmartIterator& readToTag(various::SmartIterator& it, HtmlTag tag, bool endTag, std::string& readText);
+	
+	//gets rid of all html tags in the string
+	void trimHtmlTags(std::string& str);
 }
