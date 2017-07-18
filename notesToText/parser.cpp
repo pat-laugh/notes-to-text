@@ -76,7 +76,7 @@ void Parser::readNextTag()
     {
         string tag = makeTagString<false>(HtmlTag::DIV);
         auto index = left.find(tag);
-        if (index != string::npos)
+        if (index != string::npos && index != 0)
             splitString(left, leftover, index, tag.length());
     }
 }
