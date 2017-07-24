@@ -30,8 +30,12 @@ int main(int argc, char** argv)
 	{
 		SmartIterator it(fileIn.rdbuf());
 		auto lines = Parser::parse(move(it));
-		for (const auto& line : lines)
-			cout << line << endl;
+		if (!lines.empty())
+		{
+			cout << lines[0];
+			for (decltype(lines.size()) i = 1; i < lines.size(); ++i)
+				cout << endl << lines[i];
+		}
 	}
 	catch (const exception& e)
 	{
