@@ -1,72 +1,24 @@
-# Notes-to-text
+# Notes-to-text / iPhone Notes Copier
 
-This is an application to convert iPhone Notes documents to text.
+This is a suite of applications to convert iPhone Notes documents to text. There
+are 3 different applications:
+-	ios-9: Tested with iOS 9 files. Written in C++, using a Mac.
+-	gui: Controls the keyboard and mouse (as if you were doing the work). You'd
+	expect this to be perfectly accurate, but the Notes app is buggy so there
+	are some edge cases (like HTML markup appearing in the iPhone, but
+	not in the Mac). Written in Python, using a Mac.
+-	ios-10: Tested with iOS 10+ files. Written in Python, using Linux.
 
-The purpose is to allow an user to AirDrop a document and then use its text. The
-challenge is that the documents use a kind of broken HTML to store their
-content. This application seeks to fetch the information in a pure textual form.
+See the README file in each for more information. Since I don't know the exact
+specifications of Notes documents, none of these solutions are guaranteed to
+work with all files, but they'll probably work with most of your files
+(especially if written in plain English with no special markup).
 
-I don't know the exact specifications of a Notes document. Therefore, the
-application may output incorrect text. Many errors have been fixed (the
-documents' format lack uniform consistency). As of now all the text I've
-converted was correct.
+## Use cases
 
-## Installation
+If your notes are from iOS 9, use the `ios-9` app. (Earlier than that, I don't
+have any solution.)
 
-### Linux and Mac
-
-The external library [various](https://github.com/pat-laugh/various-cpp)
-is used in this project. You can make a symbolic link to it. After that, make
-should create the executable.
-
-## Usage
-
-The executable can only be called with one parameter that is the name of a file.
-
-The output is the content of the note as it would be if it were text only.
-
-### Tip
-
-To parse multiple files, you can use the following bash script:
-```
-for file in *.notesairdropdocument
-	do <executable> "$file" > "${file/notesairdropdocument/txt}"
-done
-```
-Substitute `<executable>` with the name of the executable. This puts the output
-for each file in the current directory in a file of the same name, but with the
-"txt" extension.
-
-This assumes that no file contains "notesairdropdocument" in their name other
-than the extension. Existing .txt files will be overwritten.
-
-## Concept
-
-### Library
-
-The library `notesToText` does most of the work.
-
-The text data of notes is stored in HTML. There is a body element. Then, most
-lines are stored inside div elements. Sometimes the div element is not closed.
-Sometimes the first line is not in a div element. The parser takes care of
-handling the inconsistencies. It then returns a list containing all the lines.
-
-Some text may contain HTML entities. Empty lines are denoted with `<br>`.
-Everything is properly filtered to look like it should in text.
-
-### Parsing HTML
-
-A real parser is not used since that is unnecessary. Before and after the body
-element, there is junk that is ignored. The attributes of tags are wholly
-ignored. The whole thing is parsed as if there were only body and div tags and
-the rest is text. Tags are not nested. It wouldn't make sense anyways since a
-div tag represents a new line.
-
-### Executable
-
-The executable takes the list of lines returned from the parser and outputs
-each item followed by a newline.
-
-## Possible errors
-
-Errors related to encoding have not yet been tested.
+Otherwise, use the `ios-10` app. The `gui` app is mostly there because I'd built
+it before the `ios-10` app, but it could be useful if `ios-10` can't parse many
+of your notes.
