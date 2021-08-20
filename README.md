@@ -2,7 +2,8 @@
 
 This is a suite of applications to convert iPhone Notes documents to text. There
 are 3 different applications:
--	ios-9: Tested with iOS 9 files. Written in C++, using a Mac.
+-	ios-9: Tested with iOS 9 files. Written in C++, using a Mac. Might not
+	compile.
 -	gui: Controls the keyboard and mouse (as if you were doing the work). You'd
 	expect this to be perfectly accurate, but the Notes app is buggy so there
 	are some edge cases (like HTML markup appearing in the iPhone, but
