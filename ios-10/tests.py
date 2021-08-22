@@ -5,7 +5,8 @@ from script import index_end, index_start, ios_14_special_chars, clean_content
 from script import set_debug, main, FILE_EXT
 
 def test_content(id, f_name, ok_i1, ok_i2, ok_content):
-	with open('./test-data/%s%s' % (f_name, FILE_EXT), 'rb') as f:
+	f_name = f_name + FILE_EXT
+	with open('./test-data/%s' % f_name, 'rb') as f:
 		s = f.read()
 		i1 = index_start(s, f_name)
 		failed = False

@@ -11,15 +11,15 @@ def clear_notes_files(dir_name='.'):
 	DOT_BAR = '._'
 	f_names, f_names_dot_bar = set(), set()
 	for f_name in os.listdir(dir_name):
-		f_name = os.path.join(dir_name, f_name)
-		if os.path.isdir(f_name):
-			print("WARN: directory ignored: %s" % f_name, file=sys.stderr)
+		full_f_name = os.path.join(dir_name, f_name)
+		if os.path.isdir(full_f_name):
+			print("WARN: directory ignored: %s" % full_f_name, file=sys.stderr)
 			continue
-		if not os.path.isfile(f_name):
-			print("WARN: file ignored: not file: %s" % f_name, file=sys.stderr)
+		if not os.path.isfile(full_f_name):
+			print("WARN: file ignored: not file: %s" % full_f_name, file=sys.stderr)
 			continue
 		if f_name.rfind(FILE_EXT) != (len(f_name) - len(FILE_EXT)):
-			print("WARN: file ignored: unexpected file extension: %s" % f_name, file=sys.stderr)
+			print("WARN: file ignored: unexpected file extension: %s" % full_f_name, file=sys.stderr)
 			continue
 		try:
 			if f_name.find(DOT_BAR) == 0:
@@ -155,7 +155,7 @@ def main(dir_in, dir_out):
 		i = f_name.find(FILE_EXT)
 		assert(i == len(f_name) - len(FILE_EXT))
 
-		with open(f_name, 'rb') as f:
+		with open(os.path.join(dir_in, f_name), 'rb') as f:
 			s = f.read()
 		content = clean_content(s, f_name)
 		if content is None:
