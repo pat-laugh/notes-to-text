@@ -1,6 +1,7 @@
 **NOTE**: This automatically removes files starting with `._`, which is garbage
 Mac may introduce when archiving/compressing/zipping files. Be careful if you
-name files starting with `._`!
+name files starting with `._`! Also, the algorithm checks if the file name
+matches the expected title of the note, so you should not change any file name.
 
 This script combines two ad hoc algorithms that determine the content of the
 Notes files. The first part of the script gets the files to parse within the
