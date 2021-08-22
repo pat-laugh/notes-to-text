@@ -8,7 +8,7 @@ are 3 different applications:
 	expect this to be perfectly accurate, but the Notes app is buggy so there
 	are some edge cases (like HTML markup appearing in the iPhone, but
 	not in the Mac). Written in Python, using a Mac.
--	ios-10: Tested with iOS 10+ files. Written in Python, using Linux.
+-	ios-10: Tested with iOS 10+ files. Written in Python, using Linux. Apparently, it does not work with iOS 14 files... Maybe it only works with iOS 10 files.
 
 See the README file in each for more information. Since I don't know the exact
 specifications of Notes documents, none of these solutions are guaranteed to
