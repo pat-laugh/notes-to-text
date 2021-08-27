@@ -16,10 +16,10 @@ then more garbage. Note that if you use
 markup might appear in your text, like getting the source of a webpage versus
 copying the presented text.
 
-The first algorithm (`index_end`) tries to determine when the content of the Notes
-file ends (wthen the useless garbage at then end starts). The second algorithm
-(`index_start`) tries to determine when the content starts. This gives the start and end
-indices to get the content from the whole file.
+One algorithm (`index_start`) tries to determine when the content of the Notes
+file starts, and the other (`index_end`) tries to determine when it ends (when
+the useless garbage at then end starts). This gives the start and end indices to
+get the content from the whole file.
 
 The script will output errors and warning if it cannot accurately determine a
 Note's content. You should manually check the content of each file where this
