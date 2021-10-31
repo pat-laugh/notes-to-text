@@ -58,8 +58,8 @@ def index_end(file_content, f_name):
 						continue
 					probaly_correct.add(f_name)
 					continue
-				print('!!! maybe wrong: %s: *val == %s; index: %s; s[i_start:i_start+120]: %s' % (f_name, val, i_start, s[i_start:i_start+120]))
-				print('??? maybe wrong: %s: *val == %s; index: %s; s[i:i+120]: %s' % (f_name, val, i, s[i:i+120]))
+				print('!!! %s: maybe wrong: *val == %s; index: %s; s[i_start:i_start+120]: %s' % (f_name, val, i_start, s[i_start:i_start+120]))
+				print('??? %s: maybe wrong: *val == %s; index: %s; s[i:i+120]: %s' % (f_name, val, i, s[i:i+120]))
 				if f_name in probaly_correct:
 					probaly_correct.remove(f_name)
 				maybe_wrong.add(f_name)
@@ -71,7 +71,7 @@ def index_end(file_content, f_name):
 				s = s[i + 2 + val:]
 				i_start = 0
 			else:
-				print('ERR non-pattern: %s: *val == %s; index: %s; len == %s' % (f_name, val, i, len(s)))
+				print('ERR %s: non-pattern: *val == %s; index: %s; len == %s' % (f_name, val, i, len(s)))
 				break
 		except ValueError:
 			if pattern_met >= 0:  
@@ -112,7 +112,7 @@ def index_start(file_content, f_name):
 	try:
 		title = s[i_title:i_nl].decode('utf-8')
 	except:
-		print('ERR got:"%s" exp:"%s" s[:60]:%s' % (s[i_title:i_nl], f_name, s[:60]))
+		print('ERR %s: got:"%s" exp:"%s" s[:60]:%s' % (f_name, s[i_title:i_nl], f_name, s[:60]))
 		non_patterns.add(f_name)
 		return None
 	i = f_name.find(FILE_EXT)
@@ -127,7 +127,7 @@ def index_start(file_content, f_name):
 	if title != f_title and (title + f_title[-2:]) != f_title:
 		f_title = f_title.replace('-', '/')
 	if title != f_title and (title + f_title[-2:]) != f_title:
-		print('!!! got:"%s" exp:"%s" s[:60]:%s' % (title, f_title, s[:60]))
+		print('!!! %s: got:"%s" exp:"%s" s[:60]:%s' % (f_name, title, f_title, s[:60]))
 		maybe_wrong.add(f_name)
 	else:
 		return i_title
