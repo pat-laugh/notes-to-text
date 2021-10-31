@@ -76,6 +76,7 @@ def index_end(file_content, f_name):
 		except ValueError:
 			if pattern_met >= 0:  
 				return pattern_met
+			break
 	return None
 
 def is_control(b):
